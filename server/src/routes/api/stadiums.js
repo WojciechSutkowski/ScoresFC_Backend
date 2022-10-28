@@ -9,7 +9,7 @@ const config = {
   method: "get",
   url: "https://v3.football.api-sports.io/venues?id",
   params: {
-    id: "556",
+    id: "555",
   },
   headers: {
     "x-rapidapi-key": "ecc8e0a784e36be844e86fa2e67b8f01",
@@ -19,7 +19,7 @@ const config = {
 
 axios(config)
   .then(function (response) {
-    console.log(JSON.stringify(response.data));
+    console.log(response.data);
     router.route("/").get((req, res) => {
       res.send(response.data);
     });
