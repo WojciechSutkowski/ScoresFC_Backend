@@ -1,52 +1,53 @@
 "use strict";
+const cors = require("cors");
 const express = require("express");
-const path = require("path");
+const bp = require("body-parser");
+const { connect } = require("mongoose");
 const mongoose = require("mongoose");
-const app = express();
-const port = process.env.PORT || 5000;
+const passport = require("passport");
+require("dotenv").config();
 
-/////////////
-// ROUTES //
-////////////
+// APP CONSTANTS
 const venue = require("./src/routes/api/venue");
 const fixtures = require("./src/routes/api/fixtures");
+const users = require("./src/routes/users");
 
-///////////////////////////////
-// MONGO DATABASE CONNECTION //
-///////////////////////////////
-mongoose.connect("mongodb://localhost:27017", (err) => {
-  if (!err) console.log("MongoDB connected correctly!");
-  else console.log("MongoDB error!");
-});
+// INITIALIZE THE APPLICATION
+const app = express();
 
-app.use(express.json());
+// MIDDLEWARES
+app.use(cors());
+app.use(bp.json());
+app.use(passport.initialize());
+require("./src/middlewares/passport")(passport);
+app.use("/users", users);
 
-app.use("/venue", venue);
-app.use("/fixtures", fixtures);
+const startApp = async () => {
+  try {
+    // MONGO DATABASE CONNECTION
+    await connect(process.env.DB, {
+      useNewUrlParser: true,
+    });
+    console.log(`Succesfully connected with the database ${process.env.DB}`);
 
-/////////////
-// WIDGETS //
-/////////////
-// app.get("/games", (req, res) => {
-//   res.sendFile(
-//     path.join(__dirname, "/src/templates", "matches_list_widget.html")
-//   );
-// });
+    // START LISTENING FOR THE SERVER
+    app.listen(process.env.PORT, () =>
+      console.log(`Server started on port ${process.env.PORT}`)
+    );
 
-// app.get("/match", (req, res) => {
-//   res.sendFile(
-//     path.join(__dirname, "/src/templates", "matche_details_widget.html")
-//   );
-// });
+    //
+    app.use(express.json());
 
-// app.get("/standings", (req, res) => {
-//   res.sendFile(
-//     path.join(__dirname, "/src/templates", "league_table_widget.html")
-//   );
-// });
+    app.use("/venue", venue);
+    app.use("/fixtures", fixtures);
 
-app.get("/", (req, res) => {
-  // root
-});
+    app.get("/", (req, res) => {
+      // root
+    });
+  } catch (error) {
+    console.log(`Unable to connect with database ${error}`);
+    startApp();
+  }
+};
 
-app.listen(port, () => console.log(`Server started on port ${port}`));
+startApp();
