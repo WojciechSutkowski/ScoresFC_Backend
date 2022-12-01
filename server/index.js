@@ -10,6 +10,8 @@ require("dotenv").config();
 // APP CONSTANTS
 const venue = require("./src/routes/api/venue");
 const fixtures = require("./src/routes/api/fixtures");
+const leagues = require("./src/routes/api/leagues");
+const countries = require("./src/routes/api/countries");
 const users = require("./src/routes/users");
 
 // INITIALIZE THE APPLICATION
@@ -21,6 +23,10 @@ app.use(bp.json());
 app.use(passport.initialize());
 require("./src/middlewares/passport")(passport);
 app.use("/users", users);
+app.use("/leagues", leagues);
+app.use("/countries", countries);
+app.use("/fixtures", fixtures);
+app.use("/venue", venue);
 
 const startApp = async () => {
   try {
@@ -37,9 +43,6 @@ const startApp = async () => {
 
     //
     app.use(express.json());
-
-    app.use("/venue", venue);
-    app.use("/fixtures", fixtures);
 
     app.get("/", (req, res) => {
       // root

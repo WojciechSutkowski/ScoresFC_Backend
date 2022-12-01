@@ -29,9 +29,35 @@ const getFixturesByLeagueId = async (leagueId) => {
   }
 };
 
+const getFixtureById = async (gameId) => {
+  try {
+    const match = await axios.get(
+      "https://v3.football.api-sports.io/fixtures?id",
+      {
+        params: {
+          id: gameId,
+        },
+        headers: {
+          "x-rapidapi-key": process.env.API_KEY,
+          "x-rapidapi-host": "v3.football.api-sports.io",
+        },
+      }
+    );
+    console.log(match);
+    return match.data.response;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 router.get("/:league/:season", async (req, res) => {
   console.log(getFixturesByLeagueId(req.params.league));
   res.send(await getFixturesByLeagueId(req.params.league));
+});
+
+router.get("/:id", async (req, res) => {
+  console.log(getFixtureById(req.params.id));
+  res.send(await getFixtureById(req.params.id));
 });
 
 module.exports = router;

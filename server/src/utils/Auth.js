@@ -93,6 +93,9 @@ const usersSignIn = async (userCredentials, role, res) => {
       username: user.username,
       role: user.role,
       email: user.email,
+      favouriteLeagues: user.favouriteLeagues,
+      favouriteGames: user.favouriteGames,
+      favouriteTeams: user.favouriteTeams,
       token: `Bearer ${token}`,
       expiresIn: 168,
     };
