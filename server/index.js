@@ -1,18 +1,20 @@
-"use strict";
-const cors = require("cors");
-const express = require("express");
-const bp = require("body-parser");
-const { connect } = require("mongoose");
-const mongoose = require("mongoose");
-const passport = require("passport");
-require("dotenv").config();
+'use strict';
+const cors = require('cors');
+const express = require('express');
+const bp = require('body-parser');
+const { connect } = require('mongoose');
+const mongoose = require('mongoose');
+const passport = require('passport');
+require('dotenv').config();
 
 // APP CONSTANTS
-const venue = require("./src/routes/api/venue");
-const fixtures = require("./src/routes/api/fixtures");
-const leagues = require("./src/routes/api/leagues");
-const countries = require("./src/routes/api/countries");
-const users = require("./src/routes/users");
+const fixtures = require('./src/routes/api/fixtures');
+const league = require('./src/routes/api/league');
+const leagues = require('./src/routes/api/leagues');
+const team = require('./src/routes/api/team');
+const search = require('./src/routes/api/search');
+const users = require('./src/routes/users');
+const comments = require('./src/routes/comments');
 
 // INITIALIZE THE APPLICATION
 const app = express();
@@ -21,12 +23,14 @@ const app = express();
 app.use(cors());
 app.use(bp.json());
 app.use(passport.initialize());
-require("./src/middlewares/passport")(passport);
-app.use("/users", users);
-app.use("/leagues", leagues);
-app.use("/countries", countries);
-app.use("/fixtures", fixtures);
-app.use("/venue", venue);
+require('./src/middlewares/passport')(passport);
+app.use('/users', users);
+app.use('/comments', comments);
+app.use('/league', league);
+app.use('/leagues', leagues);
+app.use('/fixtures', fixtures);
+app.use('/team', team);
+app.use('/search', search);
 
 const startApp = async () => {
   try {
@@ -44,7 +48,7 @@ const startApp = async () => {
     //
     app.use(express.json());
 
-    app.get("/", (req, res) => {
+    app.get('/', (req, res) => {
       // root
     });
   } catch (error) {
@@ -54,3 +58,5 @@ const startApp = async () => {
 };
 
 startApp();
+
+module.exports = app;
