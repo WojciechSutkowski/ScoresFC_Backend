@@ -7,9 +7,7 @@ const { ObjectId } = require('mongodb');
  */
 const getAllComments = async (res) => {
   try {
-    // Check if username is in the database
     const allComments = await Comment.find();
-    console.log(allComments);
 
     return res.status(200).json({
       allComments,
@@ -18,7 +16,6 @@ const getAllComments = async (res) => {
     });
   } catch (err) {
     console.log(err);
-    // Logger
     return res.status(500).json({
       message: `Unable to get comments`,
       success: false,
@@ -31,18 +28,15 @@ const getAllComments = async (res) => {
  */
 const getGameComments = async (gameId, res) => {
   try {
-    // Check if username is in the database
-    const allComments = await Comment.find({ gameId: gameId });
-    console.log(allComments);
+    const gameComments = await Comment.find({ gameId: gameId });
 
     return res.status(200).json({
-      allComments,
+      gameComments,
       message: `Get all comments correctly`,
       success: true,
     });
   } catch (err) {
     console.log(err);
-    // Logger
     return res.status(500).json({
       message: `Unable to get comments`,
       success: false,
@@ -68,7 +62,7 @@ const addComment = async (username, gameId, comment, res) => {
     });
   } catch (err) {
     console.log(err);
-    // Logger
+
     return res.status(500).json({
       message: `Unable to create comment`,
       success: false,

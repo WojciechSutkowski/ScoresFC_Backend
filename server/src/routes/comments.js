@@ -21,7 +21,7 @@ router.get('/:gameId', async (req, res) => {
 
 router.post('/create', async (req, res) => {
   await addComment(req.body.username, req.body.gameId, req.body.comment, res);
-  console.log(res.req.body);
+  // console.log(res.req.body);
 });
 
 router.delete('/delete', async (req, res) => {

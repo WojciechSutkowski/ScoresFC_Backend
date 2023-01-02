@@ -7,7 +7,7 @@ const axios = require('axios');
 const router = express.Router();
 
 /////////////////
-const getFixturesByLeagueId = async (leagueId, season) => {
+const getFixturesByLeagueId = async (leagueId, season, status) => {
   try {
     const fixtures = await axios.get(
       'https://v3.football.api-sports.io/fixtures',
@@ -15,6 +15,7 @@ const getFixturesByLeagueId = async (leagueId, season) => {
         params: {
           league: leagueId,
           season: season,
+          status: status,
         },
         headers: {
           'x-rapidapi-key': process.env.API_KEY,
@@ -50,9 +51,34 @@ const getFixtureById = async (gameId) => {
   }
 };
 
-router.get('/:league/:season', async (req, res) => {
-  console.log(getFixturesByLeagueId(req.params.league));
-  res.send(await getFixturesByLeagueId(req.params.league));
+router.get('/:league/:season/not-started', async (req, res) => {
+  res.send(
+    await getFixturesByLeagueId(
+      req.params.league,
+      req.params.season,
+      'TBD-NS-PST-CANC-ABD'
+    )
+  );
+});
+
+router.get('/:league/:season/live', async (req, res) => {
+  res.send(
+    await getFixturesByLeagueId(
+      req.params.league,
+      req.params.season,
+      '1H-HT-2H-ET-BT-P-SUSP-INT-LIVE'
+    )
+  );
+});
+
+router.get('/:league/:season/finished', async (req, res) => {
+  res.send(
+    await getFixturesByLeagueId(
+      req.params.league,
+      req.params.season,
+      'FT-AET-PEN-WO-AWD'
+    )
+  );
 });
 
 router.get('/:id', async (req, res) => {

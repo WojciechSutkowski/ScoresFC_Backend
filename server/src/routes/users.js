@@ -1,10 +1,11 @@
 const express = require('express');
 const {
-  usersSignUp,
-  usersSignIn,
+  usersRegister,
+  usersLogin,
   userAuth,
   serializeUser,
   checkRole,
+  deleteUser,
 } = require('../utils/Auth');
 
 const {
@@ -21,24 +22,32 @@ const router = express.Router();
 
 // USER SIGN UP ROUTE
 router.post('/register-user', async (req, res) => {
-  await usersSignUp(req.body, 'user', res);
+  await usersRegister(req.body, 'user', res);
   console.log(res.req.body);
 });
 
 // ADMIN SIGN UP ROUTE
 router.post('/register-admin', async (req, res) => {
-  await usersSignUp(req.body, 'admin', res);
+  await usersRegister(req.body, 'admin', res);
+  console.log(res.req.body);
 });
 
 // USER SIGN IN ROUTE
 router.post('/login-user', async (req, res) => {
-  await usersSignIn(req.body, 'user', res);
+  await usersLogin(req.body, 'user', res);
   console.log(res.req.body);
 });
 
 // ADMIN SIGN IN ROUTE
 router.post('/login-admin', async (req, res) => {
-  await usersSignIn(req.body, 'admin', res);
+  await usersLogin(req.body, 'admin', res);
+  console.log(res.req.body);
+});
+
+// ADMIN SIGN IN ROUTE
+router.delete('/delete', async (req, res) => {
+  await deleteUser(req.query.username, res);
+  console.log(res.req.query);
 });
 
 // USER PROTECTED ROUTE
@@ -78,7 +87,7 @@ router.post('/favourite-leagues', async (req, res) => {
 
 router.delete('/favourite-leagues', async (req, res) => {
   await deleteLeagueFromFavs(req.query.username, req.query.leagueId, res);
-  console.log(res.req.body);
+  console.log(res.req.query);
 });
 
 router.post('/favourite-games', async (req, res) => {
@@ -88,7 +97,7 @@ router.post('/favourite-games', async (req, res) => {
 
 router.delete('/favourite-games', async (req, res) => {
   await deleteGameFromFavs(req.query.username, req.query.gameId, res);
-  console.log(res.req.body);
+  console.log(res.req.query);
 });
 
 router.post('/favourite-teams', async (req, res) => {
@@ -98,7 +107,7 @@ router.post('/favourite-teams', async (req, res) => {
 
 router.delete('/favourite-teams', async (req, res) => {
   await deleteTeamFromFavs(req.query.username, req.query.teamId, res);
-  console.log(res.req.body);
+  console.log(res.req.query);
 });
 
 module.exports = router;

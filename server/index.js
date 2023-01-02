@@ -12,6 +12,7 @@ const fixtures = require('./src/routes/api/fixtures');
 const league = require('./src/routes/api/league');
 const leagues = require('./src/routes/api/leagues');
 const team = require('./src/routes/api/team');
+const player = require('./src/routes/api/player');
 const search = require('./src/routes/api/search');
 const users = require('./src/routes/users');
 const comments = require('./src/routes/comments');
@@ -31,6 +32,7 @@ app.use('/leagues', leagues);
 app.use('/fixtures', fixtures);
 app.use('/team', team);
 app.use('/search', search);
+app.use('/player', player);
 
 const startApp = async () => {
   try {
@@ -41,9 +43,11 @@ const startApp = async () => {
     console.log(`Succesfully connected with the database ${process.env.DB}`);
 
     // START LISTENING FOR THE SERVER
-    app.listen(process.env.PORT, () =>
-      console.log(`Server started on port ${process.env.PORT}`)
-    );
+    if (process.env.NODE_ENV !== 'test') {
+      app.listen(process.env.PORT, () =>
+        console.log(`Server started on port ${process.env.PORT}`)
+      );
+    }
 
     //
     app.use(express.json());

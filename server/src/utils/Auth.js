@@ -1,14 +1,14 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const passport = require("passport");
-require("dotenv").config();
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const passport = require('passport');
+require('dotenv').config();
 
-const User = require("../models/User");
+const User = require('../models/User');
 
 /**
  * @DESC sign up any type of user
  */
-const usersSignUp = async (userDetails, role, res) => {
+const usersRegister = async (userDetails, role, res) => {
   try {
     // Validate username
     let usernameTaken = await validateUsername(userDetails.username);
@@ -55,7 +55,7 @@ const usersSignUp = async (userDetails, role, res) => {
 /**
  * @DESC sign in any type of user
  */
-const usersSignIn = async (userCredentials, role, res) => {
+const usersLogin = async (userCredentials, role, res) => {
   let { username, password } = userCredentials;
 
   // Check if username is in the database
@@ -86,7 +86,7 @@ const usersSignIn = async (userCredentials, role, res) => {
         email: user.email,
       },
       process.env.SECRET,
-      { expiresIn: "7 days" }
+      { expiresIn: '7 days' }
     );
 
     let result = {
@@ -113,17 +113,44 @@ const usersSignIn = async (userCredentials, role, res) => {
   }
 };
 
+const deleteUser = async (username, res) => {
+  try {
+    // Check if username is in the database
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({
+        message: `Username not found`,
+        success: false,
+      });
+    }
+
+    await User.collection.deleteOne({ username: username });
+
+    return res.status(200).json({
+      message: `Deleted correctly`,
+      success: true,
+    });
+  } catch (err) {
+    console.log(err);
+    // Logger
+    return res.status(500).json({
+      message: `Unable to delete account`,
+      success: false,
+    });
+  }
+};
+
 /**
  * @DESC passport middleware
  */
-const userAuth = passport.authenticate("jwt", { session: false });
+const userAuth = passport.authenticate('jwt', { session: false });
 
 /**
  * @DESC check middleware
  */
 const checkRole = (roles) => (req, res, next) =>
   !roles.includes(req.user.role)
-    ? res.status(401).json("Unauthorized")
+    ? res.status(401).json('Unauthorized')
     : next();
 
 const validateUsername = async (username) => {
@@ -149,9 +176,10 @@ const serializeUser = (user) => {
 };
 
 module.exports = {
-  usersSignUp,
-  usersSignIn,
+  usersRegister,
+  usersLogin,
   userAuth,
   serializeUser,
   checkRole,
+  deleteUser,
 };
