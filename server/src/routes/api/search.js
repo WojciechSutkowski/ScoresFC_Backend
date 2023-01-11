@@ -1,13 +1,10 @@
 'use strict';
-const path = require('path');
 require('dotenv').config({ path: 'server/.env' });
-
 const express = require('express');
 const axios = require('axios');
 
 const router = express.Router();
 
-/////////////////
 const getTeamByName = async (teamName) => {
   try {
     const team = await axios.get('https://v3.football.api-sports.io/teams', {
@@ -48,12 +45,10 @@ const getLeagueByName = async (leagueName) => {
 };
 
 router.get('/team/:search', async (req, res) => {
-  console.log(getTeamByName(req.params.search));
   res.send(await getTeamByName(req.params.search));
 });
 
 router.get('/league/:search', async (req, res) => {
-  console.log(getLeagueByName(req.params.search));
   res.send(await getLeagueByName(req.params.search));
 });
 

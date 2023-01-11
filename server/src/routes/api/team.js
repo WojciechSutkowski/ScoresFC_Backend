@@ -1,13 +1,10 @@
 'use strict';
-const path = require('path');
 require('dotenv').config({ path: 'server/.env' });
-
 const express = require('express');
 const axios = require('axios');
 
 const router = express.Router();
 
-/////////////////
 const getTeamById = async (teamId) => {
   try {
     const team = await axios.get('https://v3.football.api-sports.io/teams', {
@@ -113,6 +110,25 @@ const getNextFiveGames = async (teamId) => {
   }
 };
 
+const getLeagueTeams = async (leagueId, leagueSeason) => {
+  try {
+    const teams = await axios.get('https://v3.football.api-sports.io/teams', {
+      params: {
+        league: leagueId,
+        season: leagueSeason,
+      },
+      headers: {
+        'x-rapidapi-key': process.env.API_KEY,
+        'x-rapidapi-host': 'v3.football.api-sports.io',
+      },
+    });
+    console.log(teams.data.response);
+    return teams.data.response;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 router.get('/:id', async (req, res) => {
   res.send(await getTeamById(req.params.id));
 });
@@ -131,6 +147,13 @@ router.get('/:id/games/last', async (req, res) => {
 
 router.get('/:id/games/next', async (req, res) => {
   res.send(await getNextFiveGames(req.params.id));
+});
+
+router.get('/:league/:season/teams', async (req, res) => {
+  console.log(req.params);
+  const resp = await getLeagueTeams(req.params.league, req.params.season);
+  console.log(resp);
+  res.send(resp);
 });
 
 module.exports = router;

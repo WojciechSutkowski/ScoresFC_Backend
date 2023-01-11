@@ -1,12 +1,10 @@
 'use strict';
-const path = require('path');
 require('dotenv').config({ path: 'server/.env' });
-
 const express = require('express');
 const axios = require('axios');
+
 const router = express.Router();
 
-/////////////////
 const getFixturesByLeagueId = async (leagueId, season, status) => {
   try {
     const fixtures = await axios.get(
@@ -23,7 +21,7 @@ const getFixturesByLeagueId = async (leagueId, season, status) => {
         },
       }
     );
-    console.log(fixtures);
+    console.log(fixtures.data.response);
     return fixtures.data.response;
   } catch (err) {
     console.log(err);
@@ -44,7 +42,7 @@ const getFixtureById = async (gameId) => {
         },
       }
     );
-    console.log(match);
+    console.log(match.data.response);
     return match.data.response;
   } catch (err) {
     console.log(err);
@@ -82,7 +80,6 @@ router.get('/:league/:season/finished', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
-  console.log(getFixtureById(req.params.id));
   res.send(await getFixtureById(req.params.id));
 });
 

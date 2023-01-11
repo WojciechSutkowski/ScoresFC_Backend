@@ -1,19 +1,18 @@
-const User = require("../models/User");
+'use strict';
+const User = require('../models/User');
 
 /**
- * @DESC get games from favourites
+ * Get all user favourites
  */
 const getAllFromFavs = async (username, res) => {
-  // Check if username is in the database
   const checkUser = await User.findOne({ username });
-  console.log(checkUser);
+
   if (!checkUser) {
     return res.status(404).json({
       message: `Username not found`,
       success: false,
     });
   } else {
-    console.log(checkUser.favouriteGames);
     return res.status(200).json({
       favouriteLeagues: checkUser.favouriteLeagues,
       favouriteGames: checkUser.favouriteGames,
@@ -25,11 +24,11 @@ const getAllFromFavs = async (username, res) => {
 };
 
 /**
- * @DESC add league to favourites
+ * Add league to favourites
  */
 const addLeagueToFavs = async (username, leagueId, res) => {
-  // Check if username is in the database
   const checkUser = await User.findOne({ username });
+
   if (!checkUser) {
     return res.status(404).json({
       message: `Username not found`,
@@ -38,7 +37,6 @@ const addLeagueToFavs = async (username, leagueId, res) => {
   } else {
     checkUser.favouriteLeagues.push(leagueId);
     checkUser.save();
-    console.log(checkUser.favouriteLeagues);
     return res.status(200).json({
       message: `Added to favourites correctly`,
       success: true,
@@ -47,10 +45,9 @@ const addLeagueToFavs = async (username, leagueId, res) => {
 };
 
 /**
- * @DESC remove league from favourites
+ * Remove league from favourites
  */
 const deleteLeagueFromFavs = async (username, leagueId, res) => {
-  // Check if username is in the database
   const checkUser = await User.findOne({ username });
   console.log(checkUser);
   if (!checkUser) {
@@ -61,7 +58,6 @@ const deleteLeagueFromFavs = async (username, leagueId, res) => {
   } else {
     checkUser.favouriteLeagues.pull(leagueId);
     checkUser.save();
-    console.log(checkUser.favouriteLeagues);
     return res.status(200).json({
       message: `Removed from favourites correctly`,
       success: true,
@@ -70,10 +66,9 @@ const deleteLeagueFromFavs = async (username, leagueId, res) => {
 };
 
 /**
- * @DESC add game to favourites
+ * Add game to favourites
  */
 const addGameToFavs = async (username, gameId, res) => {
-  // Check if username is in the database
   const checkUser = await User.findOne({ username });
   if (!checkUser) {
     return res.status(404).json({
@@ -83,7 +78,6 @@ const addGameToFavs = async (username, gameId, res) => {
   } else {
     checkUser.favouriteGames.push(gameId);
     checkUser.save();
-    console.log(checkUser.favouriteGames);
     return res.status(200).json({
       message: `Added to favourites correctly`,
       success: true,
@@ -92,10 +86,9 @@ const addGameToFavs = async (username, gameId, res) => {
 };
 
 /**
- * @DESC remove game from favourites
+ * Remove game from favourites
  */
 const deleteGameFromFavs = async (username, gameId, res) => {
-  // Check if username is in the database
   const checkUser = await User.findOne({ username });
   if (!checkUser) {
     return res.status(404).json({
@@ -105,7 +98,6 @@ const deleteGameFromFavs = async (username, gameId, res) => {
   } else {
     checkUser.favouriteGames.pull(gameId);
     checkUser.save();
-    console.log(checkUser.favouriteGames);
     return res.status(200).json({
       message: `Removed from favourites correctly`,
       success: true,
@@ -114,10 +106,9 @@ const deleteGameFromFavs = async (username, gameId, res) => {
 };
 
 /**
- * @DESC add team to favourites
+ * Add team to favourites
  */
 const addTeamToFavs = async (username, teamId, res) => {
-  // Check if username is in the database
   const checkUser = await User.findOne({ username });
   if (!checkUser) {
     return res.status(404).json({
@@ -127,7 +118,6 @@ const addTeamToFavs = async (username, teamId, res) => {
   } else {
     checkUser.favouriteTeams.push(teamId);
     checkUser.save();
-    console.log(checkUser.favouriteTeams);
     return res.status(200).json({
       message: `Added to favourites correctly`,
       success: true,
@@ -136,10 +126,9 @@ const addTeamToFavs = async (username, teamId, res) => {
 };
 
 /**
- * @DESC remove team from favourites
+ * Remove team from favourites
  */
 const deleteTeamFromFavs = async (username, teamId, res) => {
-  // Check if username is in the database
   const checkUser = await User.findOne({ username });
   if (!checkUser) {
     return res.status(404).json({
@@ -149,7 +138,6 @@ const deleteTeamFromFavs = async (username, teamId, res) => {
   } else {
     checkUser.favouriteTeams.pull(teamId);
     checkUser.save();
-    console.log(checkUser.favouriteTeams);
     return res.status(200).json({
       message: `Removed from favourites correctly`,
       success: true,

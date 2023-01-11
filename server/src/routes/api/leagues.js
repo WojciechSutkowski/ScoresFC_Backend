@@ -1,13 +1,10 @@
 'use strict';
-const path = require('path');
 require('dotenv').config({ path: 'server/.env' });
-
 const express = require('express');
 const axios = require('axios');
 
 const router = express.Router();
 
-/////////////////
 const getLeaguesByCountry = async (countryName) => {
   try {
     const leagues = await axios.get(
@@ -30,7 +27,6 @@ const getLeaguesByCountry = async (countryName) => {
 };
 
 router.get('/:country', async (req, res) => {
-  console.log(getLeaguesByCountry(req.params.country));
   res.send(await getLeaguesByCountry(req.params.country));
 });
 

@@ -1,23 +1,17 @@
 'use strict';
-const path = require('path');
 require('dotenv').config({ path: 'server/.env' });
-
 const express = require('express');
 const axios = require('axios');
 
 const router = express.Router();
 
-/////////////////
-const getLeagueByCountry = async (countryName, leagueName, current, season) => {
+const getLeagueById = async (leagueId) => {
   try {
-    const leagues = await axios.get(
+    const league = await axios.get(
       'https://v3.football.api-sports.io/leagues',
       {
         params: {
-          country: countryName,
-          name: leagueName,
-          current: current,
-          season: season,
+          id: leagueId,
         },
         headers: {
           'x-rapidapi-key': process.env.API_KEY,
@@ -25,10 +19,9 @@ const getLeagueByCountry = async (countryName, leagueName, current, season) => {
         },
       }
     );
-    // console.log(leagues);
-    // console.log(leagueName);
-    // console.log(leagues.data.response);
-    return leagues.data.response;
+
+    console.log(league.data.response);
+    return league.data.response;
   } catch (err) {
     console.log(err);
   }
@@ -49,6 +42,8 @@ const getCurrentLeagueById = async (leagueId) => {
         },
       }
     );
+
+    console.log(league.data.response);
     return league.data.response;
   } catch (err) {
     console.log(err);
@@ -70,6 +65,7 @@ const getLeagueSeason = async (leagueId, leagueSeason) => {
         },
       }
     );
+
     console.log(season.data.response);
     return season.data.response;
   } catch (err) {
@@ -77,27 +73,16 @@ const getLeagueSeason = async (leagueId, leagueSeason) => {
   }
 };
 
-router.get('/:country/:name/:season?', async (req, res) => {
-  const resp = await getLeagueByCountry(
-    req.params.country,
-    req.params.name,
-    req.params.current,
-    req.params.season
-  );
-  console.log(resp);
-  res.send(resp);
+router.get('/:id', async (req, res) => {
+  res.send(await getCurrentLeagueById(req.params.id));
 });
 
-router.get('/:id', async (req, res) => {
-  const resp = await getCurrentLeagueById(req.params.id);
-  console.log(resp);
-  res.send(resp);
+router.get('/seasons/:id', async (req, res) => {
+  res.send(await getLeagueById(req.params.id));
 });
 
 router.get('/:id/:season', async (req, res) => {
-  const resp = await getLeagueSeason(req.params.id, req.params.season);
-  console.log(resp);
-  res.send(resp);
+  res.send(await getLeagueSeason(req.params.id, req.params.season));
 });
 
 module.exports = router;

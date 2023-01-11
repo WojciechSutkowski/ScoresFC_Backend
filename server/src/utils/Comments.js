@@ -1,9 +1,10 @@
-const User = require('../models/User');
-const Comment = require('../models/Comment');
+'use strict';
 const { ObjectId } = require('mongodb');
 
+const Comment = require('../models/Comment');
+
 /**
- * @DESC get games from favourites
+ * Get games from favourites
  */
 const getAllComments = async (res) => {
   try {
@@ -24,7 +25,7 @@ const getAllComments = async (res) => {
 };
 
 /**
- * @DESC get games from favourites
+ * Get games from favourites
  */
 const getGameComments = async (gameId, res) => {
   try {
@@ -45,7 +46,7 @@ const getGameComments = async (gameId, res) => {
 };
 
 /**
- * @DESC add league to favourites
+ * Add league to favourites
  */
 const addComment = async (username, gameId, comment, res) => {
   try {
@@ -71,20 +72,10 @@ const addComment = async (username, gameId, comment, res) => {
 };
 
 /**
- * @DESC remove game from favourites
+ * Remove game from favourites
  */
-const deleteComment = async (username, role, commentId, res) => {
-  // Check if username is in the database
-  const checkUser = await User.findOne({ username });
+const deleteComment = async (commentId, res) => {
   const checkComment = await Comment.findById(ObjectId(commentId));
-
-  // User role check
-  if (checkUser.role !== role) {
-    return res.status(403).json({
-      message: `You try to access wrong content`,
-      success: false,
-    });
-  }
 
   if (!checkComment) {
     return res.status(404).json({

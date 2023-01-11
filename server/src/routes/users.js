@@ -1,4 +1,6 @@
+'use strict';
 const express = require('express');
+
 const {
   usersRegister,
   usersLogin,
@@ -7,7 +9,6 @@ const {
   checkRole,
   deleteUser,
 } = require('../utils/Auth');
-
 const {
   getAllFromFavs,
   addLeagueToFavs,
@@ -20,65 +21,40 @@ const {
 
 const router = express.Router();
 
-// USER SIGN UP ROUTE
 router.post('/register-user', async (req, res) => {
   await usersRegister(req.body, 'user', res);
   console.log(res.req.body);
 });
 
-// ADMIN SIGN UP ROUTE
 router.post('/register-admin', async (req, res) => {
   await usersRegister(req.body, 'admin', res);
   console.log(res.req.body);
 });
 
-// USER SIGN IN ROUTE
 router.post('/login-user', async (req, res) => {
   await usersLogin(req.body, 'user', res);
   console.log(res.req.body);
 });
 
-// ADMIN SIGN IN ROUTE
 router.post('/login-admin', async (req, res) => {
   await usersLogin(req.body, 'admin', res);
   console.log(res.req.body);
 });
 
-// ADMIN SIGN IN ROUTE
 router.delete('/delete', async (req, res) => {
   await deleteUser(req.query.username, res);
   console.log(res.req.query);
 });
 
-// USER PROTECTED ROUTE
-router.get('/profile', userAuth, async (req, res) => {
-  return res.json(serializeUser(req.user));
-});
-
-// USER PROTECTED ROUTE
-router.get(
-  '/user-profile',
+// FAVOURITES
+router.post(
+  '/favourites',
   userAuth,
   checkRole(['user', 'admin']),
   async (req, res) => {
-    return res.json(serializeUser(req.user));
+    return await getAllFromFavs(req.body.params.username, res);
   }
 );
-
-// ADMIN PROTECTED ROUTE
-router.get(
-  '/admin-profile',
-  userAuth,
-  checkRole(['admin']),
-  async (req, res) => {
-    return res.json(serializeUser(req.user));
-  }
-);
-
-// FAVOURITES
-router.get('/favourites', async (req, res) => {
-  return await getAllFromFavs(req.query.username, res);
-});
 
 router.post('/favourite-leagues', async (req, res) => {
   await addLeagueToFavs(req.body.username, req.body.leagueId, res);

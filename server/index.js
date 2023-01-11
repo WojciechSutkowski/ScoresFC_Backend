@@ -3,7 +3,6 @@ const cors = require('cors');
 const express = require('express');
 const bp = require('body-parser');
 const { connect } = require('mongoose');
-const mongoose = require('mongoose');
 const passport = require('passport');
 require('dotenv').config();
 
@@ -34,10 +33,10 @@ app.use('/team', team);
 app.use('/search', search);
 app.use('/player', player);
 
-const startApp = async () => {
+const startApp = () => {
   try {
     // MONGO DATABASE CONNECTION
-    await connect(process.env.DB, {
+    connect(process.env.DB, {
       useNewUrlParser: true,
     });
     console.log(`Succesfully connected with the database ${process.env.DB}`);
@@ -49,12 +48,7 @@ const startApp = async () => {
       );
     }
 
-    //
     app.use(express.json());
-
-    app.get('/', (req, res) => {
-      // root
-    });
   } catch (error) {
     console.log(`Unable to connect with database ${error}`);
     startApp();

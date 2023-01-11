@@ -1,16 +1,15 @@
+'use strict';
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
-require('dotenv').config();
 
 const User = require('../models/User');
 
 /**
- * @DESC sign up any type of user
+ * Register any type of user
  */
 const usersRegister = async (userDetails, role, res) => {
   try {
-    // Validate username
     let usernameTaken = await validateUsername(userDetails.username);
     if (!usernameTaken) {
       return res.status(400).json({
@@ -19,7 +18,6 @@ const usersRegister = async (userDetails, role, res) => {
       });
     }
 
-    // Validate email
     let emailTaken = await validateEmail(userDetails.email);
     if (!emailTaken) {
       return res.status(400).json({
@@ -28,10 +26,15 @@ const usersRegister = async (userDetails, role, res) => {
       });
     }
 
-    // Get hashed password
+    if (userDetails.password === '') {
+      return res.status(400).json({
+        message: `Password cannot be empty`,
+        success: false,
+      });
+    }
+
     const password = await bcrypt.hash(userDetails.password, 12);
 
-    // Create new user
     const newUser = new User({
       ...userDetails,
       password,
@@ -39,12 +42,11 @@ const usersRegister = async (userDetails, role, res) => {
     });
     await newUser.save();
     return res.status(201).json({
-      message: `Signed up correctly`,
+      message: `Registered correctly`,
       success: true,
     });
   } catch (err) {
     console.log(err);
-    // Logger
     return res.status(500).json({
       message: `Unable to create account`,
       success: false,
@@ -53,13 +55,12 @@ const usersRegister = async (userDetails, role, res) => {
 };
 
 /**
- * @DESC sign in any type of user
+ * Login any type of user
  */
 const usersLogin = async (userCredentials, role, res) => {
   let { username, password } = userCredentials;
-
-  // Check if username is in the database
   const user = await User.findOne({ username });
+
   if (!user) {
     return res.status(404).json({
       message: `Username not found`,
@@ -67,7 +68,6 @@ const usersLogin = async (userCredentials, role, res) => {
     });
   }
 
-  // User role check
   if (user.role !== role) {
     return res.status(403).json({
       message: `You try to access wrong content`,
@@ -75,8 +75,8 @@ const usersLogin = async (userCredentials, role, res) => {
     });
   }
 
-  // Password check
   let isPasswordMatching = await bcrypt.compare(password, user.password);
+
   if (isPasswordMatching) {
     let token = jwt.sign(
       {
@@ -102,7 +102,7 @@ const usersLogin = async (userCredentials, role, res) => {
 
     return res.status(200).json({
       ...result,
-      message: `Signed in correctly`,
+      message: `Logged in correctly`,
       success: true,
     });
   } else {
@@ -115,8 +115,8 @@ const usersLogin = async (userCredentials, role, res) => {
 
 const deleteUser = async (username, res) => {
   try {
-    // Check if username is in the database
     const user = await User.findOne({ username });
+
     if (!user) {
       return res.status(404).json({
         message: `Username not found`,
@@ -132,7 +132,6 @@ const deleteUser = async (username, res) => {
     });
   } catch (err) {
     console.log(err);
-    // Logger
     return res.status(500).json({
       message: `Unable to delete account`,
       success: false,
@@ -140,14 +139,8 @@ const deleteUser = async (username, res) => {
   }
 };
 
-/**
- * @DESC passport middleware
- */
 const userAuth = passport.authenticate('jwt', { session: false });
 
-/**
- * @DESC check middleware
- */
 const checkRole = (roles) => (req, res, next) =>
   !roles.includes(req.user.role)
     ? res.status(401).json('Unauthorized')

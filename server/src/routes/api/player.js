@@ -1,12 +1,10 @@
 'use strict';
-const path = require('path');
 require('dotenv').config({ path: 'server/.env' });
-
 const express = require('express');
 const axios = require('axios');
+
 const router = express.Router();
 
-/////////////////
 const getPlayerBySeason = async (playerId, season) => {
   try {
     const player = await axios.get(
@@ -22,7 +20,7 @@ const getPlayerBySeason = async (playerId, season) => {
         },
       }
     );
-    console.log(player);
+    console.log(player.data.response);
     return player.data.response;
   } catch (err) {
     console.log(err);
