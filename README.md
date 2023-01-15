@@ -24,7 +24,7 @@ Celem pracy było zaprojektowanie i zaimplementowanie aplikacji internetowej poz
 
 ### Diagram ERD
 
-![ERD Diagram](../../Pobrane/ERD.png)
+![ERD Diagram](./server/src/assets/ERD.png)
 
 ---
 
