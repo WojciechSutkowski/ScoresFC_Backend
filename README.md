@@ -20,6 +20,14 @@ Celem pracy było zaprojektowanie i zaimplementowanie aplikacji internetowej poz
 - Jest (testy jednostkowe)
 - Cypress (testy E2E)
 
+---
+
+### Diagram ERD
+
+![ERD Diagram](../../Pobrane/ERD.png)
+
+---
+
 ### Wymagania
 
 Wymagania serwera dla aplikacji ScoresFC można podzielić na trzy główne sekcje:
