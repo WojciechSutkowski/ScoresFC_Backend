@@ -16,8 +16,8 @@ Projekt i implementacja aplikacji internetowej do wspomagania wyświetlania wyni
 
 ---
 
-#### Obsługa zapytań do API-Football
-Serwer ma również za zadanie pobieranie danych z [API-Football](https://www.api-football.com/).
+#### API-Football
+Aplikacja wykorzystuje dane dostarczane przez [API-Football](https://www.api-football.com/).
 
 ### Dokumentacja API
 Została sporządzona dokumentacja API, dostępna tutaj: [dokumentacja Swagger](https://app.swaggerhub.com/apis-docs/WojciechSutkowski/ScoresFC/1.0.0)
